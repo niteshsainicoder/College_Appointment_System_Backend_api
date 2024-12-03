@@ -16,7 +16,7 @@ export const Login = async (req, res) => {
     // Compare the provided password with the hashed password in the database
     const isPasswordValid = await bcryptjs.compare(password, user.password);
     if (!isPasswordValid) {
-      return res.status(401).json({ message: "Invalid email or password" });
+      return res.status(401).json({ message: "Invalid  password" });
     }
 
     // Generate a JWT token
