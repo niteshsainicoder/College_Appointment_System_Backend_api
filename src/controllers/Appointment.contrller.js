@@ -152,7 +152,7 @@ export const CancelAppointment = async (req, res) => {
             timeslots: { $elemMatch: { time: timeslot, isBooked: true } },
         });
         if (!checkSlotAvailable) {
-            return res.status(400).json({ message: "Slot not available" });
+            return res.status(400).json({ message: "There is no slot are booked" });
         }
         await AppointmentSchema.deleteOne({ professorId: req.user.id, timeslot, date });
 
