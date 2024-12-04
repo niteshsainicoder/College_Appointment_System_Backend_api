@@ -50,6 +50,9 @@ export const Register = async (req, res) => {
     //destructuring the body 
     const { name, email, password, role } = req.body;
 
+    if (!name || !email || !password || !role) {
+      return res.status(400).json({ message: "All fields are required" });
+    }
     //finding if the user already exists
     if (await UserSchema.findOne({ email })) {
       return res.status(400).json({ message: "Email already exists", });
