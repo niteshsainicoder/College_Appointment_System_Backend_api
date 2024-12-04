@@ -10,7 +10,7 @@ const Availability = Schema(
             required: true,
         },
 
-        day:
+        date:
         {
             type: String,
             required: true,

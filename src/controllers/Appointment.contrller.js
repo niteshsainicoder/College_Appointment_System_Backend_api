@@ -14,7 +14,7 @@ export const AddAvailability = async (req, res) => {
         // Check if the availability already exists for that timeslot
         const existingAvailability = await AvailabilitySchema.findOne({
             professorId: ProfessorId,
-            day: date,
+             date,
             timeslots: { $elemMatch: { time: timeslot } },
         });
 
@@ -23,7 +23,7 @@ export const AddAvailability = async (req, res) => {
         }
 
         // Check if the availability already exists for that day to update timeslots
-        const dayAvailability = await AvailabilitySchema.findOne({ professorId: ProfessorId, day: date });
+        const dayAvailability = await AvailabilitySchema.findOne({ professorId: ProfessorId,  date });
         if (dayAvailability) {
             dayAvailability.timeslots.push({ time: timeslot, isBooked: false });
             await dayAvailability.save();
@@ -33,7 +33,7 @@ export const AddAvailability = async (req, res) => {
         // If the availability does not exist, create a new one
         const newAvailability = await AvailabilitySchema.create({
             professorId: ProfessorId,
-            day: date,
+             date,
             timeslots: [{ time: timeslot, isBooked: false }],
         });
 
@@ -76,7 +76,7 @@ export const GetAppointmentsDetails = async (req, res) => {
             // Optionally filter only unbooked slots if needed
             const UnbookedSlots = AvailableTimeSlots.map(slot => ({
                 professorId: slot.professorId,
-                day: slot.day,
+                date: slot.date,
                 timeslots: slot.timeslots.filter(t => !t.isBooked)
             }));
 
@@ -121,7 +121,7 @@ export const BookAppointment = async (req, res) => {
 
         const newAppointment = await AppointmentSchema.create({ professorId, studentId, timeslot, date });
         const updateSlot = await AvailabilitySchema.findOne(
-            { professorId, day: date },
+            { professorId,  date },
         );
         updateSlot.timeslots.find((slot) => slot.time === timeslot).isBooked = true;
         await updateSlot.save();
@@ -157,7 +157,7 @@ export const CancelAppointment = async (req, res) => {
         await AppointmentSchema.deleteOne({ professorId: req.user.id, timeslot, date });
 
         const updateSlot = await AvailabilitySchema.findOne(
-            { professorId: req.user.id, day: date },
+            { professorId: req.user.id,  date },
         );
         updateSlot.timeslots.find((slot) => slot.time === timeslot).isBooked = false;
         await updateSlot.save();
